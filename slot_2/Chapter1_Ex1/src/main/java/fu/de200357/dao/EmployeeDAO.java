@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class EmployeeDAO {
@@ -78,6 +79,32 @@ public class EmployeeDAO {
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+    // TODO 0.5 — READ theo email (dùng setParameter để tránh JPQL Injection)
+    public Employee findByEmail(String email) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            List<Employee> list = em.createQuery(
+                            "SELECT e FROM Employee e WHERE e.email = :email", Employee.class)
+                    .setParameter("email", email)
+                    .getResultList();
+            return list.isEmpty() ? null : list.get(0);
+        } finally {
+            em.close();
+        }
+    }
+
+    // TODO 0.5 — READ danh sách theo salary lớn hơn mức chỉ định hoặc active = true
+    public List<Employee> findBySalaryGreaterThanOrActive(BigDecimal minSalary) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery(
+                            "SELECT e FROM Employee e WHERE e.salary > :minSalary OR e.active = true", Employee.class)
+                    .setParameter("minSalary", minSalary)
+                    .getResultList();
         } finally {
             em.close();
         }
