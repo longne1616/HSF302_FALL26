@@ -23,7 +23,8 @@ public class EmployeeDAO {
             tx.commit();
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
-            e.printStackTrace();
+            //e.printStackTrace();
+            throw e;
         } finally {
             em.close();
         }

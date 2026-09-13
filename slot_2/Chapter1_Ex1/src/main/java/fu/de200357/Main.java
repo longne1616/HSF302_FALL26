@@ -74,6 +74,57 @@ public class Main {
         System.out.println("====== HOAN THANH LUONG DEMO CRUD TUAN TU ======");
         System.out.println("==================================================");
 
+        // ==================================================
+        // === TODO 0.9: KIỂM CHỨNG RÀNG BUỘC UNIQUE EMAIL ===
+        // ==================================================
+        System.out.println("\n==================================================");
+        System.out.println("====== TODO 0.9: KIEM CHUNG UNIQUE EMAIL CONST ====");
+        System.out.println("==================================================");
+
+        String duplicateEmail = "unique_test@gmail.com";
+
+        // Bước A: Tạo & lưu nhân viên 1 (Thành công)
+        Employee emp1 = Employee.builder()
+                .fullName("Nhan Vien 1")
+                .email(duplicateEmail)
+                .salary(new BigDecimal("12000000.00"))
+                .gender(Gender.MALE)
+                .hireDate(LocalDate.now())
+                .active(true)
+                .build();
+        employeeDAO.save(emp1);
+        System.out.println("-> [SAVE 1] Them thanh cong nhan vien 1 voi ID: " + emp1.getId());
+
+        // Bước B: Cố ý tạo nhân viên 2 trùng email và try/catch để quan sát lỗi
+        Employee emp2 = Employee.builder()
+                .fullName("Nhan Vien 2 (Email Trung)")
+                .email(duplicateEmail) // Trùng email với emp1
+                .salary(new BigDecimal("15000000.00"))
+                .gender(Gender.FEMALE)
+                .hireDate(LocalDate.now())
+                .active(true)
+                .build();
+
+        System.out.println("-> [SAVE 2] Co y save() nhan vien 2 voi email trùng: " + duplicateEmail);
+        try {
+            employeeDAO.save(emp2);
+            System.out.println("-> Save thanh cong (Khong mong muon)");
+        } catch (Exception ex) {
+            System.out.println("\n[DA BAT LOI UNIQUE CONSTRAINT THANH CONG]");
+            System.out.println("-> Thong bao: Khong the luu do email '" + duplicateEmail + "' da ton tai trong CSDL!");
+            System.out.println("-> Ngoai le ghi nhan: " + ex.getClass().getName());
+        }
+
+        // Dọn dẹp dữ liệu test unique
+        if (emp1.getId() != null) {
+            employeeDAO.delete(emp1.getId());
+            System.out.println("-> Da xoa du lieu test UNIQUE EMAIL (ID: " + emp1.getId() + ")");
+        }
+
+        System.out.println("\n==================================================");
+        System.out.println("====== HOAN THANH TAT CA CAC TODO =============");
+        System.out.println("==================================================");
+
         emf.close();
     }
 }
