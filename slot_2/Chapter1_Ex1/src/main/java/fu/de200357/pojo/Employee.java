@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 @Table(name = "employees")
@@ -41,7 +42,13 @@ public class Employee {
 
     // KHÔNG có cột tương ứng trong DB - tính toán ngay khi gọi getter
     @Transient
-    private int yearsOfService;
+    public int getYearsOfService() {
+        if (hireDate == null) {
+            return 0;
+        }
+
+        return Period.between(hireDate, LocalDate.now()).getYears();
+    }
 
 }
 
