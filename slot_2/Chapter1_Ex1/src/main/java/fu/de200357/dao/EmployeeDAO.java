@@ -88,6 +88,7 @@ public class EmployeeDAO {
         return mergedEmployee;
     }
 
+
     // 5. Delete - Xóa Employee theo ID
     public void deleteById(Long id) {
         EntityManager em = emf.createEntityManager();
@@ -106,6 +107,11 @@ public class EmployeeDAO {
             em.close();
         }
     }
+
+    public void delete(Long id){
+        deleteById(id);
+    }
+
     // TODO 0.5 — READ theo email (dùng setParameter để tránh JPQL Injection)
     public Employee findByEmail(String email) {
         EntityManager em = emf.createEntityManager();

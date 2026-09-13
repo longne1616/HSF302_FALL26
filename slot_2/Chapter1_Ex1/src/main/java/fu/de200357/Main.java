@@ -70,10 +70,18 @@ public class Main {
             System.out.println("-> Luong sau khi update: " + updatedEmp.getSalary());
         }
 
-        // --- TEST DELETE ---
+        // --- TEST DELETE (TODO 0.7) ---
+        System.out.println("\n=== TEST TODO 0.7: DELETE ===");
         if (foundEmp != null) {
-            employeeDAO.deleteById(foundEmp.getId());
-            System.out.println("\n-> Da xoa Employee ID: " + foundEmp.getId());
+            Long deletedId = foundEmp.getId();
+
+            // 1. Thực hiện xóa
+            employeeDAO.delete(deletedId);
+            System.out.println("-> Da goi delete cho Employee ID: " + deletedId);
+
+            // 2. Tự kiểm tra: findById lại phải trả về null
+            Employee checkDeleted = employeeDAO.findById(deletedId);
+            System.out.println("-> Ket qua findById(" + deletedId + ") sau khi xoa: " + checkDeleted);
         }
 
         // 3. Đóng EMF khi kết thúc ứng dụng
