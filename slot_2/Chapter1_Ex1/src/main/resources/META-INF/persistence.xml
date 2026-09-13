@@ -7,8 +7,8 @@
     <persistence-unit name="hsf302FU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <!-- Lưu ý: Nhớ sửa fe.masv thành package chính xác của bạn -->
-        <class>fe.masv.pojo.Employee</class>
+
+        <class>fe.de200357.pojo.Employee</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver"
