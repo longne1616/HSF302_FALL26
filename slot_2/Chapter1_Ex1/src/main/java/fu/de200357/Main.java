@@ -12,14 +12,15 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // 1. Khởi tạo EntityManagerFactory
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hsf302FU");
-        System.out.println("EMF tao thanh cong!");
-
-        // 2. Khởi tạo DAO
         EmployeeDAO employeeDAO = new EmployeeDAO(emf);
 
-        // --- TEST CREATE (TODO 0.3) ---
+        System.out.println("==================================================");
+        System.out.println("====== TODO 0.8: DEMO LUONG CRUD DAY DU IN MAIN ===");
+        System.out.println("==================================================");
+
+        // 1. CREATE
+        System.out.println("\n--- 1. CREATE ---");
         Employee emp = Employee.builder()
                 .fullName("Nguyen Van A")
                 .email("nguyenvana@gmail.com")
@@ -29,62 +30,50 @@ public class Main {
                 .active(true)
                 .build();
         employeeDAO.save(emp);
-        System.out.println("-> Da them Employee ID: " + emp.getId());
+        Long id = emp.getId();
+        System.out.println("-> [CREATE] Da them Employee thanh cong voi ID: " + id);
 
-        // --- TEST READ CO BAN (TODO 0.4) ---
-        Employee foundEmp = employeeDAO.findById(emp.getId());
-        System.out.println("-> Tim thay theo ID: " + foundEmp);
+        // 2. READ
+        System.out.println("\n--- 2. READ ---");
+        Employee foundEmp = employeeDAO.findById(id);
+        System.out.println("-> [READ] Tim thay theo ID: " + foundEmp);
 
-        List<Employee> list = employeeDAO.findAll();
-        System.out.println("-> So luong Employee trong DB: " + list.size());
-
-        // --- TEST READ CO DIEU KIEN (TODO 0.5) ---
-        System.out.println("\n=== TEST TODO 0.5 ===");
-
-        // 1. Tìm theo email tồn tại & không tồn tại
-        Employee foundByEmail = employeeDAO.findByEmail("nguyenvana@gmail.com");
-        System.out.println("-> Tim theo email (co ton tai): " + foundByEmail);
-
-        Employee notFoundEmail = employeeDAO.findByEmail("khongtontai@gmail.com");
-        System.out.println("-> Tim theo email (khong ton tai): " + notFoundEmail);
-
-        // 2. Tìm danh sách theo điều kiện salary > minSalary hoặc active = true
-        List<Employee> listByCondition = employeeDAO.findBySalaryGreaterThanOrActive(new BigDecimal("10000000.00"));
-        System.out.println("-> So luong thoa dieu kien JPQL: " + listByCondition.size());
-
-        // --- TEST UPDATE (TODO 0.6) ---
-        System.out.println("\n=== TEST TODO 0.6: UPDATE ===");
+        // 3. UPDATE
+        System.out.println("\n--- 3. UPDATE ---");
         if (foundEmp != null) {
             System.out.println("-> Luong truoc khi update: " + foundEmp.getSalary());
-
-            // Thay đổi lương trên entity (trạng thái detached)
             foundEmp.setSalary(new BigDecimal("20000000.00"));
             foundEmp.setFullName("Nguyen Van A (Updated)");
-
-            // Gọi update để merge vào DB
             employeeDAO.update(foundEmp);
+            System.out.println("-> [UPDATE] Da cap nhat thong tin cho Employee ID: " + id);
+        }
 
-            // Kiểm tra lại sau khi update
-            Employee updatedEmp = employeeDAO.findById(foundEmp.getId());
+        // 4. READ LAI KIEM TRA SAU UPDATE
+        System.out.println("\n--- 4. READ LAI KIEM TRA SAU UPDATE ---");
+        Employee updatedEmp = employeeDAO.findById(id);
+        if (updatedEmp != null) {
             System.out.println("-> Ten sau khi update: " + updatedEmp.getFullName());
             System.out.println("-> Luong sau khi update: " + updatedEmp.getSalary());
         }
 
-        // --- TEST DELETE (TODO 0.7) ---
-        System.out.println("\n=== TEST TODO 0.7: DELETE ===");
-        if (foundEmp != null) {
-            Long deletedId = foundEmp.getId();
+        // 5. DELETE
+        System.out.println("\n--- 5. DELETE ---");
+        employeeDAO.delete(id);
+        System.out.println("-> [DELETE] Da goi xoa Employee ID: " + id);
 
-            // 1. Thực hiện xóa
-            employeeDAO.delete(deletedId);
-            System.out.println("-> Da goi delete cho Employee ID: " + deletedId);
-
-            // 2. Tự kiểm tra: findById lại phải trả về null
-            Employee checkDeleted = employeeDAO.findById(deletedId);
-            System.out.println("-> Ket qua findById(" + deletedId + ") sau khi xoa: " + checkDeleted);
+        // 6. READ LAI KIEM TRA DA XOA
+        System.out.println("\n--- 6. READ LAI KIEM TRA SAU DELETE ---");
+        Employee checkDeleted = employeeDAO.findById(id);
+        if (checkDeleted == null) {
+            System.out.println("-> Ket qua findById(" + id + "): null (Thong bao: Khong tim thay nhan vien)");
+        } else {
+            System.out.println("-> Nhan vien van con: " + checkDeleted);
         }
 
-        // 3. Đóng EMF khi kết thúc ứng dụng
+        System.out.println("\n==================================================");
+        System.out.println("====== HOAN THANH LUONG DEMO CRUD TUAN TU ======");
+        System.out.println("==================================================");
+
         emf.close();
     }
 }
