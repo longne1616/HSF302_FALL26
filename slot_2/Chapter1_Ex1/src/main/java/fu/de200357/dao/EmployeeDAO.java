@@ -49,6 +49,7 @@ public class EmployeeDAO {
         }
     }
 
+    /*
     // 4. Update - Cập nhật thông tin Employee
     public void update(Employee employee) {
         EntityManager em = emf.createEntityManager();
@@ -63,6 +64,28 @@ public class EmployeeDAO {
         } finally {
             em.close();
         }
+    }
+*/
+
+    // TODO 0.6 — UPDATE: EmployeeDAO.update (Employee e)
+    public Employee update(Employee e) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        Employee mergedEmployee = null;
+        try {
+            tx.begin();
+            // Gán lại kết quả merge(e) vì e có thể ở trạng thái Detached
+            mergedEmployee = em.merge(e);
+            tx.commit();
+        } catch (Exception ex) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            ex.printStackTrace();
+        } finally {
+            em.close();
+        }
+        return mergedEmployee;
     }
 
     // 5. Delete - Xóa Employee theo ID

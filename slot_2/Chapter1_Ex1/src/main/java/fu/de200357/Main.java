@@ -52,17 +52,28 @@ public class Main {
         List<Employee> listByCondition = employeeDAO.findBySalaryGreaterThanOrActive(new BigDecimal("10000000.00"));
         System.out.println("-> So luong thoa dieu kien JPQL: " + listByCondition.size());
 
-        // --- TEST UPDATE ---
+        // --- TEST UPDATE (TODO 0.6) ---
+        System.out.println("\n=== TEST TODO 0.6: UPDATE ===");
         if (foundEmp != null) {
+            System.out.println("-> Luong truoc khi update: " + foundEmp.getSalary());
+
+            // Thay đổi lương trên entity (trạng thái detached)
+            foundEmp.setSalary(new BigDecimal("20000000.00"));
             foundEmp.setFullName("Nguyen Van A (Updated)");
+
+            // Gọi update để merge vào DB
             employeeDAO.update(foundEmp);
-            System.out.println("\n-> Sau khi update: " + employeeDAO.findById(foundEmp.getId()).getFullName());
+
+            // Kiểm tra lại sau khi update
+            Employee updatedEmp = employeeDAO.findById(foundEmp.getId());
+            System.out.println("-> Ten sau khi update: " + updatedEmp.getFullName());
+            System.out.println("-> Luong sau khi update: " + updatedEmp.getSalary());
         }
 
         // --- TEST DELETE ---
         if (foundEmp != null) {
             employeeDAO.deleteById(foundEmp.getId());
-            System.out.println("-> Da xoa Employee ID: " + foundEmp.getId());
+            System.out.println("\n-> Da xoa Employee ID: " + foundEmp.getId());
         }
 
         // 3. Đóng EMF khi kết thúc ứng dụng
