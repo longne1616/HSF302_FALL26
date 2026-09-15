@@ -1,72 +1,79 @@
 package fu.de200357;
 
 import fu.de200357.dao.DepartmentDAO;
-import fu.de200357.dao.EmployeeDAO;
 import fu.de200357.pojo.Department;
 import fu.de200357.pojo.Employee;
 import fu.de200357.pojo.Gender;
 import fu.de200357.util.JPAUtil;
+import jakarta.persistence.EntityManager;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        DepartmentDAO deptDAO = new DepartmentDAO();
-        EmployeeDAO empDAO = new EmployeeDAO();
 
-        System.out.println("==================================================");
-        System.out.println("      KIỂM TRA TODO 2.1 VÀ TODO 2.2      ");
-        System.out.println("==================================================\n");
+        DepartmentDAO departmentDAO = new DepartmentDAO();
 
-        try {
-            // 1. Tạo và lưu Department trước để lấy FK
-            Department dept = new Department("Phòng Kỹ Thuật", "Hà Nội");
-            deptDAO.save(dept);
-            System.out.println("[TEST PASS] Tạo Department thành công, ID = " + dept.getId());
+        System.out.println("========== TODO 2.7: DEMO PERSIST CASCADE & JOIN FETCH ==========");
+        // 1) Tạo Department + 3 Employee qua helper method (TODO 2.4)
+        // Sửa "Marketing" thành "Marketing 2" hoặc tên bất kỳ chưa có trong DB
+        Department it = new Department("Marketing", "Ha Noi");
 
-            // 2. TODO 2.1 & 2.2: Tạo Employee gắn với Department (Owning side)
-            Employee emp = new Employee(
-                    "dev.nguyen@company.com",
-                    "Nguyễn Văn Dev",
-                    Gender.MALE, // Enum String
-                    new BigDecimal("20000000.00"), // BigDecimal
-                    LocalDate.now() // LocalDate
-            );
+        Employee e1 = new Employee("aa2.nguyen@company.com", "Nguyen Van A", Gender.MALE,
+                new BigDecimal("15000000"), LocalDate.of(2022, 1, 10));
+        Employee e2 = new Employee("bb2.tran@company.com", "Tran Thi B", Gender.FEMALE,
+                new BigDecimal("18000000"), LocalDate.of(2021, 6, 1));
+        Employee e3 = new Employee("cc2.le@company.com", "Le Van C", Gender.OTHER,
+                new BigDecimal("12000000"), LocalDate.of(2023, 3, 15));
 
-            // Thiết lập mối quan hệ Owning side từ phía Employee
-            emp.setDepartment(dept);
+        it.addEmployee(e1);
+        it.addEmployee(e2);
+        it.addEmployee(e3);
 
-            // Lưu Employee xuống DB
-            empDAO.save(emp);
-            System.out.println("[TEST PASS] Lưu Employee thành công với department_id = " + emp.getDepartment().getId());
+        // Tạo thêm 1 phòng nữa để test bài toán N+1
+        Department hr = new Department("Human Resources", "Da Nang");
+        Employee e4 = new Employee("dd.pham@company.com", "Pham Van D", Gender.MALE,
+                new BigDecimal("14000000"), LocalDate.of(2020, 4, 12));
+        hr.addEmployee(e4);
 
-            // 3. Kiểm tra Validation Unique Email (TODO 2.1)
-            System.out.print("Kiểm tra Unique Email... ");
-            try {
-                Employee dupEmp = new Employee(
-                        "dev.nguyen@company.com", // Trùng email
-                        "Nguyễn Văn Trùng",
-                        Gender.FEMALE,
-                        new BigDecimal("15000000.00"),
-                        LocalDate.now()
-                );
-                dupEmp.setDepartment(dept);
-                empDAO.save(dupEmp);
-                System.err.println("-> [FAILED]: Trùng email nhưng không ném Exception!");
-            } catch (Exception e) {
-                System.out.println("-> [TEST PASS] Đã chặn trùng email thành công!");
-            }
+        // 2) Chỉ persist department — cascade = ALL tự lưu các Employee
+        departmentDAO.save(it);
+        departmentDAO.save(hr);
+        System.out.println("Luu thanh cong các phong ban!");
 
-            System.out.println("\n==================================================");
-            System.out.println("   KẾT QUẢ: TODO 2.1 VÀ 2.2 HOẠT ĐỘNG CHUẨN!   ");
-            System.out.println("==================================================");
-
-        } catch (Exception e) {
-            System.err.println("\n[LỖI RUNTIME]: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            JPAUtil.close();
+        // 3) Tim lại kèm employees bằng JOIN FETCH (TODO 2.6)
+        Department found = departmentDAO.findByIdWithEmployees(it.getId());
+        System.out.println("Phong ban: " + found.getName());
+        for (Employee e : found.getEmployees()) {
+            System.out.println("  - " + e);
         }
+
+        System.out.println("\n========== TODO 2.8: TÁI HIỆN N+1 QUERY PROBLEM ==========");
+        /*
+         * Mở EntityManager trực tiếp tại Main để giữ Session trong khi duyệt Lazy collection
+         * 1 câu SELECT lấy toàn bộ N Departments (SELECT d FROM Department d)
+         * N câu SELECT lấy danh sách Employee riêng lẻ cho từng Department
+         */
+        EntityManager em = JPAUtil.getEMF().createEntityManager();
+        List<Department> departmentsLazy = em.createQuery("SELECT d FROM Department d", Department.class).getResultList();
+
+        for (Department d : departmentsLazy) {
+            System.out.println("Department: " + d.getName() + " - Employee count: " + d.getEmployees().size());
+        }
+        em.close(); // Đóng EntityManager sau khi kết thúc TODO 2.8
+
+        System.out.println("\n========== TODO 2.9: FIX N+1 PROBLEM BẰNG JOIN FETCH ==========");
+        /*
+         * Chỉ sinh duy nhất 1 câu SQL JOIN (SELECT DISTINCT d FROM Department d JOIN FETCH d.employees)
+         * Load toàn bộ Department và Employees trong 1 lần duy nhất
+         */
+        List<Department> departmentsFetched = departmentDAO.findAllWithEmployees();
+        for (Department d : departmentsFetched) {
+            System.out.println("Department: " + d.getName() + " - Employee count: " + d.getEmployees().size());
+        }
+
+        JPAUtil.close();
     }
 }
