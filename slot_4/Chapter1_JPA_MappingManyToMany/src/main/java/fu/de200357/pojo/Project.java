@@ -3,8 +3,6 @@ package fu.de200357.pojo;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "projects")
@@ -15,18 +13,10 @@ public class Project {
 
     @Column(name = "project_code", unique = true, nullable = false)
     private String projectCode;
-
     private String projectName;
-
     private BigDecimal budget;
-
     private LocalDate startDate;
-
-    private LocalDate endDate; // có thể null nếu chưa kết thúc
-
-    // TODO 5.3 — inverse side
-    @ManyToMany(mappedBy = "projects")
-    private Set<Employee> employees = new HashSet<>();
+    private LocalDate endDate;
 
     public Project() {}
 
@@ -48,24 +38,7 @@ public class Project {
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
     public LocalDate getEndDate() { return endDate; }
     public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
-    public Set<Employee> getEmployees() { return employees; }
-
-    // TODO 5.4
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Project)) return false;
-        Project p = (Project) o;
-        return projectCode != null && projectCode.equals(p.projectCode);
-    }
 
     @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    @Override
-    public String toString() {
-        return projectName + " (" + projectCode + ")";
-    }
+    public String toString() { return projectName + " (" + projectCode + ")"; }
 }
