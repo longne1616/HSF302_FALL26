@@ -61,4 +61,21 @@ public class Employee {
 
     @Override
     public String toString() { return fullName + " (" + email + ")"; }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Employee)) return false;
+        Employee other = (Employee) o;
+        // Dùng email thay vì id: id null trước khi persist, nếu 2 object khác
+        // nhau đều id null thì equals sẽ luôn true (sai). Email là business key
+        // duy nhất, ổn định ngay cả trước khi lưu DB.
+        return email != null && email.equals(other.email);
+    }
+
+    @Override
+    public int hashCode() {
+        // Hằng số cố định thay vì email.hashCode(): nếu field đổi sau khi
+        // object đã ở trong HashSet, object sẽ "lạc" trong bucket cũ.
+        return 31;
+    }
 }

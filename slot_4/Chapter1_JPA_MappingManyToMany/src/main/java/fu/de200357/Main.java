@@ -6,6 +6,8 @@ import fu.de200357.pojo.*;
 import fu.de200357.util.JPAUtil;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
@@ -19,5 +21,10 @@ public class Main {
 
         Project p2 = new Project("PRJ-B", "Test Project", new BigDecimal("1000"), LocalDate.now());
         System.out.println(p2.getEmployees()); // phải in []
+
+        Set<Employee> set = new HashSet<>();
+        set.add(new Employee("dup@company.com", "A1", Gender.MALE, BigDecimal.ONE, LocalDate.now()));
+        set.add(new Employee("dup@company.com", "A2", Gender.FEMALE, BigDecimal.TEN, LocalDate.now()));
+        System.out.println(set.size()); // phải 1
     }
 }
