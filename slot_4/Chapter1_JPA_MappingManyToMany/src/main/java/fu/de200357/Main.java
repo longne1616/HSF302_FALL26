@@ -16,5 +16,8 @@ public class Main {
 
         Employee e2 = new Employee("test2@company.com", "Test2", Gender.MALE, new BigDecimal("1000"), LocalDate.now());
         System.out.println(e2.getProjects()); // phải in []
+
+        Project p2 = new Project("PRJ-B", "Test Project", new BigDecimal("1000"), LocalDate.now());
+        System.out.println(p2.getEmployees()); // phải in []
     }
 }
