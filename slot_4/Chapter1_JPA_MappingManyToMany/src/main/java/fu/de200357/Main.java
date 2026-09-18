@@ -32,5 +32,18 @@ public class Main {
         emp.assignToProject(prj);
         System.out.println(emp.getProjects().contains(prj)); // phải true
         System.out.println(prj.getEmployees().contains(emp)); // phải true
+
+        EmployeeDAO employeeDAO = new EmployeeDAO();
+        ProjectDAO projectDAO = new ProjectDAO();
+
+        // Đổi tên biến tránh trùng lặp
+        Employee empDao = new Employee("dao1@company.com", "DAO1", Gender.MALE, BigDecimal.ONE, LocalDate.now());
+        Project prjDao = new Project("PRJ-DAO", "DAO Test", BigDecimal.TEN, LocalDate.now());
+        employeeDAO.save(empDao);
+        projectDAO.save(prjDao);
+
+        employeeDAO.assignEmployeeToProject(empDao.getId(), prjDao.getId());
+        Employee found = employeeDAO.findByIdWithProjects(empDao.getId());
+        System.out.println(found.getProjects().size()); // phải 1
     }
 }
