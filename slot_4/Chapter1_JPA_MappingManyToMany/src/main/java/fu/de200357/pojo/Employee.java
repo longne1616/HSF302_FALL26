@@ -58,6 +58,10 @@ public class Employee {
     public void setActive(boolean active) { this.active = active; }
     public Set<Project> getProjects() { return projects; }
     public void setProjects(Set<Project> projects) { this.projects = projects; }
+    public void assignToProject(Project p) {
+        this.projects.add(p);
+        p.getEmployees().add(this);
+    }
 
     @Override
     public String toString() { return fullName + " (" + email + ")"; }

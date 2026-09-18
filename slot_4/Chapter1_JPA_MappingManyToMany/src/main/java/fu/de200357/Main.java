@@ -26,5 +26,11 @@ public class Main {
         set.add(new Employee("dup@company.com", "A1", Gender.MALE, BigDecimal.ONE, LocalDate.now()));
         set.add(new Employee("dup@company.com", "A2", Gender.FEMALE, BigDecimal.TEN, LocalDate.now()));
         System.out.println(set.size()); // phải 1
+
+        Employee emp = new Employee("h1@company.com", "H1", Gender.MALE, BigDecimal.ONE, LocalDate.now());
+        Project prj = new Project("PRJ-H", "Helper Test", BigDecimal.TEN, LocalDate.now());
+        emp.assignToProject(prj);
+        System.out.println(emp.getProjects().contains(prj)); // phải true
+        System.out.println(prj.getEmployees().contains(emp)); // phải true
     }
 }
