@@ -13,5 +13,8 @@ public class Main {
         Project p = new Project("PRJ-A", "Website Redesign", new BigDecimal("50000"), LocalDate.now());
         System.out.println(e.getFullName());   // phải in "Test"
         System.out.println(p.getProjectName()); // phải in "Website Redesign"
+
+        Employee e2 = new Employee("test2@company.com", "Test2", Gender.MALE, new BigDecimal("1000"), LocalDate.now());
+        System.out.println(e2.getProjects()); // phải in []
     }
 }
