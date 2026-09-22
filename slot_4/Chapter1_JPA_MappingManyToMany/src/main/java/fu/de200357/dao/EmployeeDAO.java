@@ -90,4 +90,23 @@ public class EmployeeDAO {
             em.close();
         }
     }
+    public void deactivateEmployee(Long employeeId) {
+        EntityManager em = JPAUtil.getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Employee e = em.find(Employee.class, employeeId);
+            e.setActive(false);
+            tx.commit();
+            // Nhân viên nghỉ việc KHÔNG tự động bị gỡ khỏi project đang tham gia:
+            // employee_project là dữ liệu lịch sử, cần giữ để tra cứu sau này.
+            // Không cascade REMOVE ở đây; muốn loại người nghỉ việc khỏi thống kê
+            // thì đã có điều kiện active=true trong TODO 5.8/5.10 lo việc đó rồi.
+        } catch (Exception ex) {
+            if (tx.isActive()) tx.rollback();
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
 }
