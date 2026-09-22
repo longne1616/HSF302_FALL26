@@ -82,4 +82,8 @@ public class Employee {
         // object đã ở trong HashSet, object sẽ "lạc" trong bucket cũ.
         return 31;
     }
+    public void unassignFromProject(Project p) {
+        this.projects.remove(p);
+        p.getEmployees().remove(this);
+    }
 }

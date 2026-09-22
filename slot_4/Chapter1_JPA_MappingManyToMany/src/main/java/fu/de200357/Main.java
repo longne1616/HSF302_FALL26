@@ -69,6 +69,14 @@ public class Main {
             Employee empFound = employeeDAO.findByIdWithProjects(id);
             System.out.println(empFound.getFullName() + " -> " + empFound.getProjects().size() + " project(s)");
         }
+        // đếm employee_project trong SSMS trước: 4 dòng
+        employeeDAO.unassignEmployeeFromProject(nv1.getId(), prjB.getId());
+// đếm lại: phải còn 3 dòng
+
+        Employee checkE = employeeDAO.findById(nv1.getId());
+        Project checkP = projectDAO.findById(prjB.getId());
+        System.out.println(checkE != null); // phải true
+        System.out.println(checkP != null); // phải true
 
     }
 }
