@@ -5,6 +5,7 @@ import fu.de200357.pojo.Project;
 import fu.de200357.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import java.util.List;
 
 public class EmployeeDAO {
 
@@ -75,6 +76,16 @@ public class EmployeeDAO {
         } catch (Exception ex) {
             if (tx.isActive()) tx.rollback();
             throw ex;
+        } finally {
+            em.close();
+        }
+    }
+    public List<Employee> findActiveEmployeesInMultipleProjects() {
+        EntityManager em = JPAUtil.getEMF().createEntityManager();
+        try {
+            return em.createQuery(
+                    "SELECT e FROM Employee e WHERE e.active = true AND SIZE(e.projects) > 1",
+                    Employee.class).getResultList();
         } finally {
             em.close();
         }
