@@ -69,5 +69,6 @@ public class Main {
             Employee empFound = employeeDAO.findByIdWithProjects(id);
             System.out.println(empFound.getFullName() + " -> " + empFound.getProjects().size() + " project(s)");
         }
+
     }
 }
