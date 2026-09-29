@@ -9,8 +9,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+public class DepartmentServiceImpl implements DepartmentService {
 
-public class DepartmentServiceImpl implements DepartmentService{
     private final DepartmentRepository departmentRepository;
-    private final StudentRepository studentRepository;
+    private final StudentRepository studentRepository; // Giữ lại field này để dùng cho TODO 22 sau này
+
+    @Override
+    public long count() {
+        return departmentRepository.count();
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return departmentRepository.existsById(id);
+    }
 }
