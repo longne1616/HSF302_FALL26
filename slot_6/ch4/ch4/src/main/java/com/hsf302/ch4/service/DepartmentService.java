@@ -14,4 +14,7 @@ public interface DepartmentService {
 
     Optional<Department> findByCode(String code);   // 16a
     Department getWithStudents(String code);        // 16b
+
+    int transferStudentsAndDelete(String fromCode, String toCode);
+    List<Department> findAll();
 }
