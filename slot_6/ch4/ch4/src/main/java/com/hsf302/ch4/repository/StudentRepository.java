@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -58,4 +59,8 @@ public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpec
     List<StudentSummary> findActiveSummaries();
     @Query("SELECT s FROM Student s WHERE s.department.code = :code AND s.active = true")
     Page<Student> findActiveByDepartment(@Param("code") String code, Pageable pageable);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE Student s SET s.active = false WHERE s.gpa < :threshold AND s.active = true")
+    int deactivateLowGpa(@Param("threshold") double threshold);
 }
