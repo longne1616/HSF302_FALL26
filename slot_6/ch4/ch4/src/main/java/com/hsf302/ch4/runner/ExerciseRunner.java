@@ -185,7 +185,16 @@ public class ExerciseRunner implements CommandLineRunner {
     }
 
     private void partE() {
-        // todo20(); todo21(); todo22(); todo23();
+        todo20();
+        // todo21();
+        // todo22();
+        // todo23();
+    }
+    private void todo20() {
+        title("TODO 20: Update GPA (dirty checking)");
+        System.out.println("Before: " + studentService.findByStudentCode("SE001").orElseThrow());
+        studentService.updateGpa("SE001", 3.4);
+        System.out.println("After : " + studentService.findByStudentCode("SE001").orElseThrow());
     }
 
     private void title(String t) {
