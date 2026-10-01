@@ -34,4 +34,5 @@ public interface StudentService {
     List<Student> findByGpaRange(double min, double max);
     List<Student> findActiveByGender(Gender gender);
     List<Student> findBornAfter(LocalDate date);
+    List<Student> findGoodStudents(String deptCode, double minGpa);
 }

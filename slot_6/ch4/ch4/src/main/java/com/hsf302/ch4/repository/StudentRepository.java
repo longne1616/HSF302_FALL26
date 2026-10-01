@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
 public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student>{
     Optional<Student> findByStudentCode(String studentCode);
     boolean existsByEmail(String email);
@@ -22,4 +25,9 @@ public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpec
     List<Student> findByGpaBetweenOrderByGpaDesc(double min, double max);
     List<Student> findByGenderAndActiveTrue(Gender gender);
     List<Student> findByDobAfter(LocalDate date);
+    @Query("SELECT s FROM Student s " +
+            "WHERE s.department.code = :code AND s.gpa >= :minGpa " +
+            "ORDER BY s.gpa DESC")
+    List<Student> findGoodStudentsInDepartment(@Param("code") String code,
+                                               @Param("minGpa") double minGpa);
 }
