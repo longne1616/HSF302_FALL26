@@ -49,4 +49,6 @@ public interface StudentService {
     Student updateGpa(String studentCode, double newGpa);
 
     int deactivateLowGpa(double threshold);
+
+    long deleteInactiveStudents();
 }
