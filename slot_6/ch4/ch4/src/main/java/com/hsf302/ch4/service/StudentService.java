@@ -35,4 +35,6 @@ public interface StudentService {
     List<Student> findActiveByGender(Gender gender);
     List<Student> findBornAfter(LocalDate date);
     List<Student> findGoodStudents(String deptCode, double minGpa);
+
+    List<Student> searchByKeyword(String keyword);
 }
