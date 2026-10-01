@@ -6,6 +6,7 @@ import com.hsf302.ch4.pojo.Gender;
 import com.hsf302.ch4.pojo.Student;
 import com.hsf302.ch4.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,7 @@ import org.springframework.data.domain.Sort;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
+import com.hsf302.ch4.specification.StudentSpecs;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -148,5 +149,16 @@ public class StudentServiceImpl implements StudentService {
     public Page<Student> findActiveByDepartment(String deptCode, int pageIndex, int size) {
         Pageable pageable = PageRequest.of(pageIndex, size, Sort.by("gpa").descending());
         return studentRepository.findActiveByDepartment(deptCode, pageable);
+    }
+
+
+    @Override
+    public List<Student> search(String kw, String deptCode, Double minGpa, Boolean active) {
+        Specification<Student> spec = Specification.allOf(
+                StudentSpecs.nameContains(kw),
+                StudentSpecs.inDepartment(deptCode),
+                StudentSpecs.gpaAtLeast(minGpa),
+                StudentSpecs.isActive(active));
+        return studentRepository.findAll(spec, Sort.by("fullName"));
     }
 }
