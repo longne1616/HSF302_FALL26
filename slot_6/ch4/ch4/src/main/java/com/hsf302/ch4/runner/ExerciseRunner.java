@@ -19,8 +19,11 @@ import java.util.List;
 
 import com.hsf302.ch4.pojo.Department;
 import org.hibernate.LazyInitializationException;
+import org.springframework.context.annotation.Profile;
+
 @Component
 @Order(2)
+@Profile("ex1")
 @RequiredArgsConstructor
 public class ExerciseRunner implements CommandLineRunner {
 
