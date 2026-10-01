@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
+import com.hsf302.ch4.pojo.Department;
+import org.hibernate.LazyInitializationException;
 @Component
 @Order(2)
 @RequiredArgsConstructor
@@ -113,7 +115,7 @@ public class ExerciseRunner implements CommandLineRunner {
         todo13();
         todo14();
         todo15();
-        // todo16();
+        todo16();
         // todo17();
         // todo18();
         // todo19();
@@ -134,6 +136,21 @@ public class ExerciseRunner implements CommandLineRunner {
     private void todo15() {
         title("TODO 15: Subquery - GPA above average");
         printList("GPA > AVG", studentService.findAboveAverageGpa());
+    }
+    private void todo16() {
+        title("TODO 16: LazyInitializationException & JOIN FETCH");
+
+        Department ai = departmentService.findByCode("AI").orElseThrow();
+        try {
+            System.out.println("AI has " + ai.getStudents().size() + " students");
+        } catch (LazyInitializationException e) {
+            System.out.println("(a) Caught: " + e.getClass().getSimpleName());
+            System.out.println("    " + e.getMessage());
+        }
+
+        Department aiFull = departmentService.getWithStudents("AI");
+        System.out.println("(b) " + aiFull);
+        aiFull.getStudents().forEach(s -> System.out.println("     " + s));
     }
     private void bonus() {
         // todo24();
