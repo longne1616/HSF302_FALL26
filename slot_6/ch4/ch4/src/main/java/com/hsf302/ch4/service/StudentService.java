@@ -10,9 +10,14 @@ public interface StudentService {
 
     // ===== Part B — Built-in =====
     long count();
-    Optional findById(Long id);
+    Optional<Student> findById(Long id);
 
     // TODO 7
-    List findAllOrderByGpaDesc();
-    Page findPage(int pageIndex, int size, String sortField);
+    List<Student> findAllOrderByGpaDesc();
+    Page<Student> findPage(int pageIndex, int size, String sortField);
+
+    // TODO 8
+    Optional<Student> findByStudentCode(String studentCode);
+    boolean isEmailExisted(String email);
+    long countActive();
 }
