@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Chi tiết sinh viên')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <h2>Chi tiết sinh viên</h2>
+    <table class="detail">
+        <tr><th>ID</th><td th:text="${student.id}"></td></tr>
+        <tr><th>Tên</th><td th:text="${student.name}"></td></tr>
+        <tr><th>Email</th><td th:text="${student.email}"></td></tr>
+        <tr><th>Tuổi</th><td th:text="${student.age}"></td></tr>
+        <tr><th>Ngành</th><td th:text="${student.major}"></td></tr>
+        <tr><th>GPA</th><td th:text="${student.gpa}"></td></tr>
+    </table>
+    <a th:href="@{/students/{id}/edit(id=${student.id})}" class="btn">Sửa</a>
+    <a th:href="@{/students}">← Quay lại</a>
+</div>
+</body>
+</html>

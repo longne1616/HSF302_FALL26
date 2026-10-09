@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title}">Student Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav th:fragment="navbar" class="navbar">
+    <a th:href="@{/students}" class="brand">Student Management</a>
+    <div>
+        <a th:href="@{/students}">Danh sách</a>
+        <a th:href="@{/students/top}">Top GPA</a>
+        <a th:href="@{/students/new}" class="btn">+ Thêm mới</a>
+    </div>
+</nav>
+</body>
+</html>

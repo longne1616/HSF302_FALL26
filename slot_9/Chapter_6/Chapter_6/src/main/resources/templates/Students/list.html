@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Danh sách sinh viên')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <h2>Danh sách sinh viên</h2>
+
+    <div class="alert" th:if="${message}" th:text="${message}"></div>
+
+    <!-- Form tìm kiếm -->
+    <form th:action="@{/students}" method="get" class="search-form">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm theo tên...">
+        <select name="major">
+            <option value="">-- Tất cả ngành --</option>
+            <option th:each="m : ${majors}" th:value="${m}" th:text="${m}"
+                    th:selected="${m == selectedMajor}"></option>
+        </select>
+        <button type="submit" class="btn">Tìm</button>
+        <a th:href="@{/students}">Xóa lọc</a>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th><th>Tên</th><th>Email</th><th>Tuổi</th>
+            <th>Ngành</th><th>GPA</th><th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="s : ${students}">
+            <td th:text="${s.id}"></td>
+            <td th:text="${s.name}"></td>
+            <td th:text="${s.email}"></td>
+            <td th:text="${s.age}"></td>
+            <td th:text="${s.major}"></td>
+            <td th:text="${s.gpa}"></td>
+            <td class="actions">
+                <a th:href="@{/students/{id}(id=${s.id})}">Xem</a>
+                <a th:href="@{/students/{id}/edit(id=${s.id})}">Sửa</a>
+                <form th:action="@{/students/{id}/delete(id=${s.id})}" method="post"
+                      onsubmit="return confirm('Xóa sinh viên này?')">
+                    <button type="submit" class="btn-danger">Xóa</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(students)}">
+            <td colspan="7" style="text-align:center">Không có dữ liệu</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
