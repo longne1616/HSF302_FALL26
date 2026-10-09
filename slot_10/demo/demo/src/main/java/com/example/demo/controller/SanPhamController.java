@@ -15,14 +15,12 @@ public class SanPhamController {
 
     private final List<SanPham> danhSach = new CopyOnWriteArrayList<>();
 
-    // GET – hiển thị form rỗng
     @GetMapping("/them")
     public String showForm(Model model) {
         model.addAttribute("sanPham", new SanPham());
-        return "sanpham/form";
+        return "sinhvien/sanpham/form";
     }
 
-    // POST – nhận dữ liệu, lưu, rồi REDIRECT
     @PostMapping("/them")
     public String xuLyForm(@ModelAttribute("sanPham") SanPham sanPham, RedirectAttributes ra) {
         danhSach.add(sanPham);
@@ -30,10 +28,10 @@ public class SanPhamController {
         return "redirect:/sanpham/ket-qua";
     }
 
-    // GET – trang kết quả
     @GetMapping("/ket-qua")
     public String ketQua(Model model) {
         model.addAttribute("danhSach", danhSach);
-        return "sanpham/ket-qua";
+        return "sinhvien/sanpham/ket-qua";
     }
 }
+
