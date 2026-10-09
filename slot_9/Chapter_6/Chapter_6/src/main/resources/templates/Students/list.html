@@ -19,9 +19,10 @@
         </select>
         <button type="submit" class="btn">Tìm</button>
         <a th:href="@{/students}">Xóa lọc</a>
+
     </form>
 
-    <table>
+    <table class="table table-striped table-hover align-middle">
         <thead>
         <tr>
             <th>ID</th><th>Tên</th><th>Email</th><th>Tuổi</th>
@@ -37,11 +38,17 @@
             <td th:text="${s.major}"></td>
             <td th:text="${s.gpa}"></td>
             <td class="actions">
-                <a th:href="@{/students/{id}(id=${s.id})}">Xem</a>
-                <a th:href="@{/students/{id}/edit(id=${s.id})}">Sửa</a>
+                <a th:href="@{/students/{id}(id=${s.id})}" class="btn btn-sm btn-info">
+                    <i class="bi bi-eye"></i> Xem
+                </a>
+                <a th:href="@{/students/{id}/edit(id=${s.id})}" class="btn btn-sm btn-warning">
+                    <i class="bi bi-pencil"></i> Sửa
+                </a>
                 <form th:action="@{/students/{id}/delete(id=${s.id})}" method="post"
                       onsubmit="return confirm('Xóa sinh viên này?')">
-                    <button type="submit" class="btn-danger">Xóa</button>
+                    <button type="submit" class="btn btn-sm btn-danger">
+                        <i class="bi bi-trash"></i> Xóa
+                    </button>
                 </form>
             </td>
         </tr>
@@ -51,5 +58,6 @@
         </tbody>
     </table>
 </div>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
